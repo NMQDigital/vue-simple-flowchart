@@ -1,17 +1,17 @@
 <template>
-  <div class="flowchart-container" 
-    @mousemove="handleMove" 
+  <div class="flowchart-container"
+    @mousemove="handleMove"
     @mouseup="handleUp"
     @mousedown="handleDown">
     <svg width="100%" :height="`${height}px`">
-      <flowchart-link v-bind.sync="link" 
-        v-for="(link, index) in lines" 
+      <flowchart-link v-bind.sync="link"
+        v-for="(link, index) in lines"
         :key="`link${index}`"
         @deleteLink="linkDelete(link.id)">
       </flowchart-link>
     </svg>
-    <flowchart-node v-bind.sync="node" 
-      v-for="(node, index) in scene.nodes" 
+    <flowchart-node v-bind.sync="node"
+      v-for="(node, index) in scene.nodes"
       :key="`node${index}`"
       :options="nodeOptions"
       @linkingStart="linkingStart(node.id)"
@@ -93,8 +93,8 @@ export default {
         x = this.scene.centerX + toNode.x;
         y = this.scene.centerY + toNode.y;
         [ex, ey] = this.getPortPosition('top', x, y);
-        return { 
-          start: [cx, cy], 
+        return {
+          start: [cx, cy],
           end: [ex, ey],
           id: link.id,
         };
@@ -105,9 +105,9 @@ export default {
         x = this.scene.centerX + fromNode.x;
         y = this.scene.centerY + fromNode.y;
         [cx, cy] = this.getPortPosition('bottom', x, y);
-        // push temp dragging link, mouse cursor postion = link end postion 
-        lines.push({ 
-          start: [cx, cy], 
+        // push temp dragging link, mouse cursor postion = link end postion
+        lines.push({
+          start: [cx, cy],
           end: [this.draggingLink.mx, this.draggingLink.my],
         })
       }
@@ -127,10 +127,10 @@ export default {
     },
     getPortPosition(type, x, y) {
       if (type === 'top') {
-        return [x + 40, y];
+        return [x + 100, y]; // line connection top position nodeWidth / 2
       }
       else if (type === 'bottom') {
-        return [x + 40, y + 80];
+        return [x + 100, y + 120]; // line connection bottom position nodeWidth / 2
       }
     },
     linkingStart(index) {
@@ -254,7 +254,7 @@ export default {
         return link.from !== id && link.to !== id
       })
       this.$emit('nodeDelete', id)
-    }
+    },
   },
 }
 </script>
