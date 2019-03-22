@@ -9,7 +9,7 @@
       <button @click="addNode">ADD</button>
     </div>
     
-    <simple-flowchart ref='cnvs' :scene.sync="scene"
+    <simple-flowchart ref='flowchart' :scene.sync="scene"
       @nodeClick="nodeClick"
       @nodeDelete="nodeDelete"
       @linkBreak="linkBreak"
@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     exportToJson() {
-      console.log(this.$refs.cnvs.exportToJson());
+      console.log(this.$refs.flowchart.exportToJson());
     },
     canvasClick(e) {
       console.log('canvas Click, event:', e)
