@@ -120,6 +120,9 @@ export default {
     // console.log(22222, this.rootDivOffset);
   },
   methods: {
+    exportToJson() {
+      return this.scene.nodes;
+    },
     findNodeWithID(id) {
       return this.scene.nodes.find((item) => {
           return id === item.id

@@ -9,7 +9,7 @@
       <button @click="addNode">ADD</button>
     </div>
     
-    <simple-flowchart :scene.sync="scene" 
+    <simple-flowchart ref='cnvs' :scene.sync="scene"
       @nodeClick="nodeClick"
       @nodeDelete="nodeDelete"
       @linkBreak="linkBreak"
@@ -77,22 +77,30 @@ export default {
     }
   },
   methods: {
+    exportToJson() {
+      console.log(this.$refs.cnvs.exportToJson());
+    },
     canvasClick(e) {
       console.log('canvas Click, event:', e)
     },
+    importAsJson(val) {
+
+    },
     addNode() {
-      let maxID = Math.max(0, ...this.scene.nodes.map((link) => {
-        return link.id
-      }))
+      // let maxID = Math.max(0, ...this.scene.nodes.map((link) => {
+      //   return link.id
+      // }))
+      const tmp = Date.now();
       this.scene.nodes.push({
-        id: maxID + 1,
+        id: tmp,
         x: -400,
         y: 50,
         type: this.nodeCategory[this.newNodeType],
-        label: this.newNodeLabel ? this.newNodeLabel: `test${maxID + 1}`,
+        label: this.newNodeLabel ? this.newNodeLabel: `test${tmp}`,
       })
     },
     nodeClick(id) {
+      this.exportToJson();
       console.log('node click', id);
     },
     nodeDelete(id) {

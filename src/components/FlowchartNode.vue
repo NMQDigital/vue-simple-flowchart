@@ -14,14 +14,14 @@
       <div v-text="nodeHeader" class="node-label"></div>
     </div>
     <div class="node-port node-output" @mousedown="outputMouseDown"></div>
-    <!-- <div v-show="show.delete" class="node-options-pane">
+    <div v-show="show.delete" class="node-options-pane">
       <button class="node-edit">Edit</button>
       <button class="node-delete">&times;</button>
       <div v-show="show.editMode" class="node-edit-pane">
         <input type="text" class="new-node-val" v-model="header" :id="`${id}#inp`" autofocus>
         <button @click="acceptChanges">Okay</button>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -127,6 +127,7 @@ export default {
         ) {
           // console.log('delete2', this.action.dragging);
           this.show.editMode = true;
+          this.header = this.nodeHeader;
         }
         if (
           typeof target.className === "string" &&
@@ -214,15 +215,14 @@ $portSize: 12;
     transition: ease-in all 0.2s;
     .node-delete {
       position: absolute;
-      width: 40px;
+      width: auto;
       height: 20%;
       right: 0;
-      left: 0;
-      bottom: 5%;
-      margin: auto;
+      margin: 4px;
       transform-origin: center;
       border-radius: 45px;
       background: red;
+      cursor: pointer;
     }
     .node-edit {
       position: absolute;
@@ -234,6 +234,7 @@ $portSize: 12;
       margin: auto;
       transform-origin: center;
       border-radius: 45px;
+      cursor: pointer;
     }
   }
 }
@@ -271,6 +272,7 @@ $portSize: 12;
     margin: auto;
     transform-origin: center;
     border-radius: 45px;
+    cursor: pointer;
   }
 }
 </style>
