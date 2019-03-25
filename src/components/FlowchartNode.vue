@@ -10,13 +10,19 @@
   >
     <div class="node-port node-input" @mousedown="inputMouseDown" @mouseup="inputMouseUp"></div>
     <div class="node-main">
-      <div v-text="type" class="node-type"></div>
+      <div v-text="type" :style="{ backgroundColor: nodeColor }" class="node-type"></div>
       <div v-text="nodeHeader" class="node-label"></div>
     </div>
     <div class="node-port node-output" @mousedown="outputMouseDown"></div>
     <div v-show="show.delete" class="node-options-pane">
       <button class="node-edit">Edit</button>
       <button class="node-delete">&times;</button>
+      <input
+        type="color"
+        class="node-color"
+        :style="{backgroundColor: nodeColor }"
+        @change="pickNodeColor(color, 'color_1', $event)"
+      >
       <div v-show="show.editMode" class="node-edit-pane">
         <input type="text" class="new-node-val" v-model="header" :id="`${id}#inp`" autofocus>
         <button @click="acceptChanges">Okay</button>
@@ -34,6 +40,13 @@ export default {
       default: 1000,
       validator(val) {
         return typeof val === "number";
+      }
+    },
+    color: {
+      type: String,
+      default: "black",
+      validator(val) {
+        return typeof val === "string";
       }
     },
     x: {
@@ -71,6 +84,7 @@ export default {
   },
   data() {
     return {
+      nodeColor: "",
       header: "new value",
       nodeHeader: "lorem ipsum dolor sit amet",
       show: {
@@ -142,7 +156,13 @@ export default {
       this.nodeHeader = this.header;
       this.header = "";
       this.show.editMode = false;
+    },
+    pickNodeColor(e) {
+      console.log("change", e.target.value);
     }
+  },
+  mounted() {
+    this.nodeColor = this.color;
   }
 };
 </script>
@@ -151,7 +171,7 @@ export default {
 <style scoped lang="scss">
 $themeColor: rgb(1, 1, 1);
 // $themeColor: rgb(255, 136, 85);
-$portSize: 12;
+$portSize: 20;
 
 .flowchart-node {
   margin: 0;
@@ -170,7 +190,6 @@ $portSize: 12;
   .node-main {
     text-align: center;
     .node-type {
-      background: $themeColor;
       color: white;
       font-size: 13px;
       padding: 6px;
@@ -191,6 +210,7 @@ $portSize: 12;
     border: 1px solid #ccc;
     border-radius: 100px;
     background: white;
+    z-index: 99999;
     &:hover {
       background: $themeColor;
       border: 1px solid $themeColor;
@@ -222,6 +242,16 @@ $portSize: 12;
       transform-origin: center;
       border-radius: 45px;
       background: red;
+      cursor: pointer;
+    }
+    .node-color {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 0;
+      margin: 4px;
+      transform-origin: center;
+      border-radius: 45px;
       cursor: pointer;
     }
     .node-edit {
