@@ -8,9 +8,14 @@
       <input type="text" v-model="newNodeLabel" placeholder="Input node label">
       <button @click="addNode">ADD</button>
     </div>-->
-    <div class="node-add-btn" @click='paneControl = !paneControl'>{{paneControl ? 'x' : '+'}}</div>
-    <div class="node-add-pnl" v-if='paneControl'>
-      <div class='node-category-box' v-for='(item, index) in nodeCategory' :key='index' @dblclick="addNode(item)">{{item.text}}</div>
+    <div class="node-add-btn" @click="paneControl = !paneControl">{{paneControl ? 'x' : '+'}}</div>
+    <div class="node-add-pnl" v-if="paneControl">
+      <div
+        class="node-category-box"
+        v-for="(item, index) in nodeCategory"
+        :key="index"
+        @dblclick="addNode(item)"
+      >{{item.text}}</div>
     </div>
 
     <simple-flowchart
@@ -76,18 +81,26 @@ export default {
       },
       newNodeType: 0,
       newNodeLabel: "",
-      nodeCategory: [ { text: 'type1', color: 'orange' }, { text: 'type2', color: 'red' }, { text: 'type3', color: 'olive' }, { text: 'type4', color: 'green' }, { text: 'type5', color: 'blue' }],
-      paneControl: false,
+      nodeCategory: [
+        { text: "type1", color: "orange" },
+        { text: "type2", color: "red" },
+        { text: "type3", color: "olive" },
+        { text: "type4", color: "green" },
+        { text: "type5", color: "blue" }
+      ],
+      paneControl: false
     };
   },
   methods: {
     exportToJson() {
-      console.log(this.$refs.flowchart.exportToJson());
+      // console.log(this.$refs.flowchart.exportToJson());
     },
     canvasClick(e) {
-      console.log("canvas Click, event:", e);
+      // console.log("canvas Click, event:", e);
     },
-    importAsJson(val) {},
+    importAsJson(val) {
+      console.log(val);
+    },
     addNode(category) {
       // let maxID = Math.max(0, ...this.scene.nodes.map((link) => {
       //   return link.id
@@ -98,22 +111,22 @@ export default {
         x: -400,
         y: 50,
         type: category.text,
-        label: this.newNodeLabel ? this.newNodeLabel : `test${tmp}`,
-        color: category.color,
+        label: "##value##",
+        color: category.color
       });
     },
     nodeClick(id) {
       this.exportToJson();
-      console.log("node click", id);
+      // console.log("node click", id);
     },
     nodeDelete(id) {
-      console.log("node delete", id);
+      // console.log("node delete", id);
     },
     linkBreak(id) {
-      console.log("link break", id);
+      // console.log("link break", id);
     },
     linkAdded(link) {
-      console.log("new link added:", link);
+      // console.log("new link added:", link);
     }
   }
 };
@@ -121,6 +134,7 @@ export default {
 
 <style lang="scss">
 #app {
+  user-select: none;
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -136,19 +150,22 @@ export default {
     cursor: pointer;
     position: fixed;
     margin: auto;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 24px;
+    font-weight: bold;
     bottom: 0;
     right: 0;
     margin-bottom: 40px;
     margin-right: 40px;
     border-radius: 50%;
-    background-color: white;
-    border: 3px solid rgba(128, 128, 128, 0.164);
+    color: white;
+    background: rgb(60, 140, 231);
+    border: 5px solid rgb(43, 108, 192);
     z-index: 99999;
-    &:hover {
-      border-color: rgba(128, 128, 128, 0.527);
+    &:active {
+      background-color: rgb(43, 108, 192);
     }
   }
   .node-add-pnl {
@@ -160,12 +177,12 @@ export default {
     bottom: 0;
     right: 0;
     margin-bottom: 40px;
-    margin-right:100px;
+    margin-right: 100px;
     background-color: white;
     border: 3px solid rgba(128, 128, 128, 0.164);
     border-radius: 20px;
     z-index: 99999;
-    transition: ease all .3;
+    transition: ease all 0.3;
     .node-category-box {
       position: relative;
       float: left;

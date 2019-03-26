@@ -10,23 +10,13 @@
   >
     <div class="node-port node-input" @mousedown="inputMouseDown" @mouseup="inputMouseUp"></div>
     <div class="node-main">
-      <div v-text="type" :style="{ backgroundColor: nodeColor }" class="node-type"></div>
-      <div v-text="nodeHeader" class="node-label"></div>
+      <div v-text="type" :style="{ backgroundColor: color }" class="node-type"></div>
+      <div v-text="label" class="node-label"></div>
     </div>
     <div class="node-port node-output" @mousedown="outputMouseDown"></div>
     <div v-show="show.delete" class="node-options-pane">
       <button class="node-edit">Edit</button>
       <button class="node-delete">&times;</button>
-      <input
-        type="color"
-        class="node-color"
-        :style="{backgroundColor: nodeColor }"
-        @change="pickNodeColor(color, 'color_1', $event)"
-      >
-      <div v-show="show.editMode" class="node-edit-pane">
-        <input type="text" class="new-node-val" v-model="header" :id="`${id}#inp`" autofocus>
-        <button @click="acceptChanges">Okay</button>
-      </div>
     </div>
   </div>
 </template>
@@ -84,12 +74,10 @@ export default {
   },
   data() {
     return {
-      nodeColor: "",
-      header: "new value",
-      nodeHeader: "lorem ipsum dolor sit amet",
       show: {
         delete: false,
-        editMode: false
+        editMode: false,
+        colorMode: false,
       }
     };
   },
@@ -133,37 +121,33 @@ export default {
       e.preventDefault();
     },
     handleUp(e) {
-      const target = e.target || e.srcElement;
-      if (this.$el.contains(target)) {
-        if (
-          typeof target.className === "string" &&
-          target.className.indexOf("node-edit") > -1
-        ) {
-          // console.log('delete2', this.action.dragging);
-          this.show.editMode = true;
-          this.header = this.nodeHeader;
-        }
-        if (
-          typeof target.className === "string" &&
-          target.className.indexOf("new-node-val") > -1
-        ) {
-          // console.log('delete2', this.action.dragging);
-          e.target.focus();
-        }
-      }
+      // const target = e.target || e.srcElement;
+      // if (this.$el.contains(target)) {
+      //   // if (
+      //   //   typeof target.className === "string" &&
+      //   //   target.className.indexOf("node-edit") > -1
+      //   // ) {
+      //   //   // console.log('delete2', this.action.dragging);
+      //   //   this.show.editMode = true;
+      //   //   this.header = this.nodeHeader;
+      //   // }
+      //   // if (
+      //   //   typeof target.className === "string" &&
+      //   //   target.className.indexOf("node-color") > -1
+      //   // ) {
+      //   //   // console.log('delete2', this.action.dragging);
+      //   //   this.show.colorMode = true;
+      //   // }
+      //   // if (
+      //   //   typeof target.className === "string" &&
+      //   //   target.className.indexOf("new-node-val") > -1
+      //   // ) {
+      //   //   // console.log('delete2', this.action.dragging);
+      //   //   e.target.focus();
+      //   // }
+      // }
     },
-    acceptChanges() {
-      this.nodeHeader = this.header;
-      this.header = "";
-      this.show.editMode = false;
-    },
-    pickNodeColor(e) {
-      console.log("change", e.target.value);
-    }
   },
-  mounted() {
-    this.nodeColor = this.color;
-  }
 };
 </script>
 
@@ -174,6 +158,7 @@ $themeColor: rgb(1, 1, 1);
 $portSize: 20;
 
 .flowchart-node {
+  user-select: none;
   margin: 0;
   width: 200px;
   height: 120px;
@@ -191,8 +176,9 @@ $portSize: 20;
     text-align: center;
     .node-type {
       color: white;
-      font-size: 13px;
+      font-size: 18px;
       padding: 6px;
+      text-align: left;
     }
     .node-label {
       margin: 10px;
@@ -241,18 +227,13 @@ $portSize: 20;
       margin: 4px;
       transform-origin: center;
       border-radius: 45px;
-      background: red;
+      color: white;
+      background: #E74C3C;
+      border: 2px solid #C0392B;
       cursor: pointer;
-    }
-    .node-color {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      left: 0;
-      margin: 4px;
-      transform-origin: center;
-      border-radius: 45px;
-      cursor: pointer;
+      &:active {
+        background: #C0392B;
+      }
     }
     .node-edit {
       position: absolute;
@@ -270,39 +251,5 @@ $portSize: 20;
 }
 .selected {
   box-shadow: 0 0 0 2px $themeColor;
-}
-.node-edit-pane {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  width: 200px;
-  height: 120px;
-  background-color: rgba(0, 0, 0, 1);
-  input {
-    position: absolute;
-    width: 90%;
-    height: 20%;
-    margin: auto;
-    left: 0;
-    right: 0;
-    top: 20%;
-    transform-origin: center;
-    border-radius: 45px;
-  }
-  button {
-    position: absolute;
-    width: 100px;
-    height: 20%;
-    right: 0;
-    left: 0;
-    bottom: 10%;
-    margin: auto;
-    transform-origin: center;
-    border-radius: 45px;
-    cursor: pointer;
-  }
 }
 </style>
