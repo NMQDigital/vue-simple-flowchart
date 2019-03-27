@@ -16,16 +16,18 @@
         :key="index"
         @dblclick="addNode(item)"
       >{{item.text}}</div>
-    </div> -->
+    </div>-->
 
     <simple-flowchart
       ref="flowchart"
+      :scene.sync='flowchartData'
+      :categories='nodeCategory'
       @nodeClick="nodeClick"
       @nodeDelete="nodeDelete"
       @linkBreak="linkBreak"
       @linkAdded="linkAdded"
       @canvasClick="canvasClick"
-      :height="800"
+      :height="700"
     />
   </div>
 </template>
@@ -83,11 +85,24 @@ export default {
       nodeCategory: [
         { text: "type1", color: "orange" },
         { text: "type2", color: "red" },
-        { text: "type3", color: "olive" },
-        { text: "type4", color: "green" },
-        { text: "type5", color: "blue" }
       ],
-      paneControl: false
+      paneControl: false,
+      flowchartData: {
+        centerX: 1024,
+        centerY: 140,
+        scale: 1,
+        nodes: [
+          {
+            id: 2,
+            x: -700,
+            y: -69,
+            type: "Action",
+            label: "test1",
+            color: "green"
+          }
+        ],
+        links: []
+      }
     };
   },
   methods: {
@@ -141,7 +156,7 @@ export default {
   color: #2c3e50;
   margin: 0;
   overflow: hidden;
-  height: 800px;
+  height: auto;
   .tool-wrapper {
     position: relative;
   }

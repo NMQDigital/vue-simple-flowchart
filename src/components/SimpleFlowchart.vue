@@ -162,8 +162,6 @@ export default {
         ]
       },
       nodeCategory: [
-        { text: "type1", color: "orange" },
-        { text: "type2", color: "red" },
         { text: "type3", color: "olive" },
         { text: "type4", color: "green" },
         { text: "type5", color: "blue" }
