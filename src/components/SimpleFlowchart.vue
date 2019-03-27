@@ -39,7 +39,7 @@
         <div class="node-edit-panel-label">
           <input type="text" v-model="nodeValues.text">
         </div>
-        <div class="node-edit-panel-color">
+        <!-- <div class="node-edit-panel-color">
           <button
             v-for="(item, index) in nodeValues.colors"
             :style="{backgroundColor: item }"
@@ -47,7 +47,7 @@
             :key="index"
             @click="changeColor(item, index)"
           ></button>
-        </div>
+        </div> -->
         <div class="flat-button" @click="acceptChanges">Accept Changes</div>
       </div>
     </div>
@@ -518,8 +518,8 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    width: 200px;
-    height: 300px;
+    width: 300px;
+    height: 100px;
     background-color: whitesmoke;
     border: solid 5px white;
     border-radius: 45px;
@@ -528,42 +528,45 @@ export default {
       float: left;
       width: 100%;
       height: 15%;
-      border-bottom: solid white 5px;
+      h4 {
+        margin: 0;
+      }
+      // border-bottom: solid white 5px;
     }
     .node-edit-panel-label {
       position: relative;
       float: left;
       width: 100%;
       height: 25%;
-      border-bottom: solid white 5px;
+      // border-bottom: solid white 5px;
       input {
         width: 80%;
         height: 25px;
         border-radius: 12.5px;
         outline: none;
         font-size: 20px;
-        margin-top: 25px;
+        margin-top: 7%;
         text-align: center;
       }
     }
-    .node-edit-panel-color {
-      position: relative;
-      float: left;
-      width: 100%;
-      height: 25%;
-      border-bottom: solid white 5px;
-      .color-buttons,
-      .color-buttons-active {
-        width: 27px;
-        height: 27px;
-        border-radius: 50%;
-        margin: 5px;
-        outline: none;
-      }
-      .color-buttons-active {
-        border: solid 2px rgb(60, 140, 231);
-      }
-    }
+    // .node-edit-panel-color {
+    //   position: relative;
+    //   float: left;
+    //   width: 100%;
+    //   height: 25%;
+    //   border-bottom: solid white 5px;
+    //   .color-buttons,
+    //   .color-buttons-active {
+    //     width: 27px;
+    //     height: 27px;
+    //     border-radius: 50%;
+    //     margin: 5px;
+    //     outline: none;
+    //   }
+    //   .color-buttons-active {
+    //     border: solid 2px rgb(60, 140, 231);
+    //   }
+    // }
   }
 }
 .flat-button {
@@ -572,7 +575,7 @@ export default {
   height: 35px;
   background: rgb(60, 140, 231);
   margin: auto;
-  top: 10%;
+  bottom: -50%;
   overflow: hidden;
   z-index: 1;
   cursor: pointer;
