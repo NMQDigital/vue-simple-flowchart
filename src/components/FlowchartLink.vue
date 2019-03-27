@@ -88,7 +88,7 @@ export default {
     },
     dAttr() {
       let cx = this.start[0], cy = this.start[1], ex = this.end[0], ey = this.end[1];
-      let x1 = cx, y1 = cy + 150, x2 = ex, y2 = ey - 150;
+      let x1 = cx, y1 = cy + 40, x2 = ex, y2 = ey - 40;
       return `M ${cx}, ${cy} C ${x1}, ${y1}, ${x2}, ${y2}, ${ex}, ${ey}`;
     }
   }

@@ -43,7 +43,7 @@
           <button
             v-for="(item, index) in nodeValues.colors"
             :style="{backgroundColor: item }"
-            :class='nodeValues.colorIndex === index ? "color-buttons-active" : "color-buttons"'
+            :class="nodeValues.colorIndex === index ? 'color-buttons-active' : 'color-buttons'"
             :key="index"
             @click="changeColor(item, index)"
           ></button>
@@ -63,7 +63,7 @@ export default {
   name: "VueFlowchart",
   props: {
     categories: {
-      type: Object,
+      type: Array,
       default() {
         return [];
       }
@@ -167,7 +167,7 @@ export default {
         { text: "type3", color: "olive" },
         { text: "type4", color: "green" },
         { text: "type5", color: "blue" }
-      ],
+      ]
     };
   },
   components: {
@@ -365,8 +365,10 @@ export default {
       let index = this.flowchartData.nodes.findIndex(item => {
         return item.id === this.action.dragging;
       });
-      let left = this.flowchartData.nodes[index].x + dx / this.flowchartData.scale;
-      let top = this.flowchartData.nodes[index].y + dy / this.flowchartData.scale;
+      let left =
+        this.flowchartData.nodes[index].x + dx / this.flowchartData.scale;
+      let top =
+        this.flowchartData.nodes[index].y + dy / this.flowchartData.scale;
       this.$set(
         this.flowchartData.nodes,
         index,
@@ -422,7 +424,7 @@ export default {
         label: "##value##",
         color: category.color
       });
-    },
+    }
   },
   mounted() {
     this.rootDivOffset.top = this.$el ? this.$el.offsetTop : 0;
@@ -430,64 +432,67 @@ export default {
     if (this.scene.nodes.length > 0) {
       this.flowchartData = this.scene;
     }
-    this.nodeCategory.push(...this.categories);
+    if (this.categories.length > 0) {
+      this.nodeCategory.push(...this.categories);
+    }
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">  .node-add-btn {
-    cursor: pointer;
-    position: fixed;
-    margin: auto;
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    font-size: 24px;
-    font-weight: bold;
-    bottom: 0;
-    right: 0;
-    margin-bottom: 40px;
-    margin-right: 40px;
-    border-radius: 50%;
-    color: white;
-    background: rgb(60, 140, 231);
-    border: 5px solid rgb(43, 108, 192);
-    z-index: 99999;
-    &:active {
-      background-color: rgb(43, 108, 192);
-    }
+<style scoped lang="scss">
+.node-add-btn {
+  cursor: pointer;
+  position: fixed;
+  margin: auto;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 24px;
+  font-weight: bold;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 40px;
+  margin-right: 40px;
+  border-radius: 50%;
+  color: white;
+  background: rgb(60, 140, 231);
+  border: 5px solid rgb(43, 108, 192);
+  z-index: 99999;
+  &:active {
+    background-color: rgb(43, 108, 192);
   }
-  .node-add-pnl {
-    cursor: pointer;
-    position: fixed;
-    margin: auto;
-    width: 200px;
-    height: 140px;
-    bottom: 0;
-    right: 0;
-    margin-bottom: 40px;
-    margin-right: 100px;
+}
+.node-add-pnl {
+  cursor: pointer;
+  position: fixed;
+  margin: auto;
+  width: 200px;
+  height: 140px;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 40px;
+  margin-right: 100px;
+  background-color: white;
+  border: 3px solid rgba(128, 128, 128, 0.164);
+  border-radius: 20px;
+  z-index: 99999;
+  transition: ease all 0.3;
+  .node-category-box {
+    position: relative;
+    float: left;
+    width: 55px;
+    height: 55px;
+    line-height: 55px;
+    margin: 2px;
     background-color: white;
     border: 3px solid rgba(128, 128, 128, 0.164);
     border-radius: 20px;
-    z-index: 99999;
-    transition: ease all 0.3;
-    .node-category-box {
-      position: relative;
-      float: left;
-      width: 55px;
-      height: 55px;
-      line-height: 55px;
-      margin: 2px;
-      background-color: white;
-      border: 3px solid rgba(128, 128, 128, 0.164);
-      border-radius: 20px;
-      &:hover {
-        border-color: rgba(128, 128, 128, 0.527);
-      }
+    &:hover {
+      border-color: rgba(128, 128, 128, 0.527);
     }
   }
+}
 .flowchart-container {
   margin: 0;
   background: #ddd;
