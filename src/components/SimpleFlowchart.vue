@@ -5,6 +5,15 @@
     @mouseup="handleUp"
     @mousedown="handleDown"
   >
+    <div class="node-add-btn" @click="paneControl = !paneControl">{{paneControl ? 'x' : '+'}}</div>
+    <div class="node-add-pnl" v-if="paneControl">
+      <div
+        class="node-category-box"
+        v-for="(item, index) in nodeCategory"
+        :key="index"
+        @dblclick="addNode(item)"
+      >{{item.text}}</div>
+    </div>
     <svg width="100%" :height="`${height}px`">
       <flowchart-link
         v-bind.sync="link"
@@ -15,7 +24,7 @@
     </svg>
     <flowchart-node
       v-bind.sync="node"
-      v-for="(node, index) in scene.nodes"
+      v-for="(node, index) in flowchartData.nodes"
       :key="`node${index}`"
       :options="nodeOptions"
       @linkingStart="linkingStart(node.id)"
@@ -53,6 +62,12 @@ import { getMousePosition } from "../assets/utilty/position";
 export default {
   name: "VueFlowchart",
   props: {
+    categories: {
+      type: Object,
+      default() {
+        return [];
+      }
+    },
     scene: {
       type: Object,
       default() {
@@ -72,6 +87,7 @@ export default {
   },
   data() {
     return {
+      paneControl: false,
       action: {
         linking: false,
         dragging: false,
@@ -106,7 +122,52 @@ export default {
           "purple"
         ],
         colorIndex: -1
-      }
+      },
+      flowchartData: {
+        centerX: 1024,
+        centerY: 140,
+        scale: 1,
+        nodes: [
+          {
+            id: 2,
+            x: -700,
+            y: -69,
+            type: "Action",
+            label: "test1",
+            color: "green"
+          },
+          {
+            id: 4,
+            x: -357,
+            y: 80,
+            type: "Script",
+            label: "test2",
+            color: "olive"
+          },
+          {
+            id: 6,
+            x: -557,
+            y: 80,
+            type: "Rule",
+            label: "test3",
+            color: "green"
+          }
+        ],
+        links: [
+          {
+            id: 3,
+            from: 2, // node id the link start
+            to: 4 // node id the link end
+          }
+        ]
+      },
+      nodeCategory: [
+        { text: "type1", color: "orange" },
+        { text: "type2", color: "red" },
+        { text: "type3", color: "olive" },
+        { text: "type4", color: "green" },
+        { text: "type5", color: "blue" }
+      ],
     };
   },
   components: {
@@ -116,24 +177,24 @@ export default {
   computed: {
     nodeOptions() {
       return {
-        centerY: this.scene.centerY,
-        centerX: this.scene.centerX,
-        scale: this.scene.scale,
+        centerY: this.flowchartData.centerY,
+        centerX: this.flowchartData.centerX,
+        scale: this.flowchartData.scale,
         offsetTop: this.rootDivOffset.top,
         offsetLeft: this.rootDivOffset.left,
         selected: this.action.selected
       };
     },
     lines() {
-      const lines = this.scene.links.map(link => {
+      const lines = this.flowchartData.links.map(link => {
         const fromNode = this.findNodeWithID(link.from);
         const toNode = this.findNodeWithID(link.to);
         let x, y, cy, cx, ex, ey;
-        x = this.scene.centerX + fromNode.x;
-        y = this.scene.centerY + fromNode.y;
+        x = this.flowchartData.centerX + fromNode.x;
+        y = this.flowchartData.centerY + fromNode.y;
         [cx, cy] = this.getPortPosition("bottom", x, y);
-        x = this.scene.centerX + toNode.x;
-        y = this.scene.centerY + toNode.y;
+        x = this.flowchartData.centerX + toNode.x;
+        y = this.flowchartData.centerY + toNode.y;
         [ex, ey] = this.getPortPosition("top", x, y);
         return {
           start: [cx, cy],
@@ -144,8 +205,8 @@ export default {
       if (this.draggingLink) {
         let x, y, cy, cx;
         const fromNode = this.findNodeWithID(this.draggingLink.from);
-        x = this.scene.centerX + fromNode.x;
-        y = this.scene.centerY + fromNode.y;
+        x = this.flowchartData.centerX + fromNode.x;
+        y = this.flowchartData.centerY + fromNode.y;
         [cx, cy] = this.getPortPosition("bottom", x, y);
         // push temp dragging link, mouse cursor postion = link end postion
         lines.push({
@@ -156,17 +217,12 @@ export default {
       return lines;
     }
   },
-  mounted() {
-    this.rootDivOffset.top = this.$el ? this.$el.offsetTop : 0;
-    this.rootDivOffset.left = this.$el ? this.$el.offsetLeft : 0;
-    // console.log(22222, this.rootDivOffset);
-  },
   methods: {
     exportToJson() {
-      return this.scene.nodes;
+      return this.flowchartData.nodes;
     },
     findNodeWithID(id) {
-      return this.scene.nodes.find(item => {
+      return this.flowchartData.nodes.find(item => {
         return id === item.id;
       });
     },
@@ -189,13 +245,13 @@ export default {
       // add new Link
       if (this.draggingLink && this.draggingLink.from !== index) {
         // check link existence
-        const existed = this.scene.links.find(link => {
+        const existed = this.flowchartData.links.find(link => {
           return link.from === this.draggingLink.from && link.to === index;
         });
         if (!existed) {
           let maxID = Math.max(
             0,
-            ...this.scene.links.map(link => {
+            ...this.flowchartData.links.map(link => {
               return link.id;
             })
           );
@@ -204,18 +260,18 @@ export default {
             from: this.draggingLink.from,
             to: index
           };
-          this.scene.links.push(newLink);
+          this.flowchartData.links.push(newLink);
           this.$emit("linkAdded", newLink);
         }
       }
       this.draggingLink = null;
     },
     linkDelete(id) {
-      const deletedLink = this.scene.links.find(item => {
+      const deletedLink = this.flowchartData.links.find(item => {
         return item.id === id;
       });
       if (deletedLink) {
-        this.scene.links = this.scene.links.filter(item => {
+        this.flowchartData.links = this.flowchartData.links.filter(item => {
           return item.id !== id;
         });
         this.$emit("linkBreak", deletedLink);
@@ -258,8 +314,8 @@ export default {
         this.mouse.lastX = this.mouse.x;
         this.mouse.lastY = this.mouse.y;
 
-        this.scene.centerX += diffX;
-        this.scene.centerY += diffY;
+        this.flowchartData.centerX += diffX;
+        this.flowchartData.centerY += diffY;
 
         // this.hasDragged = true
       }
@@ -306,37 +362,37 @@ export default {
       this.$emit("canvasClick", e);
     },
     moveSelectedNode(dx, dy) {
-      let index = this.scene.nodes.findIndex(item => {
+      let index = this.flowchartData.nodes.findIndex(item => {
         return item.id === this.action.dragging;
       });
-      let left = this.scene.nodes[index].x + dx / this.scene.scale;
-      let top = this.scene.nodes[index].y + dy / this.scene.scale;
+      let left = this.flowchartData.nodes[index].x + dx / this.flowchartData.scale;
+      let top = this.flowchartData.nodes[index].y + dy / this.flowchartData.scale;
       this.$set(
-        this.scene.nodes,
+        this.flowchartData.nodes,
         index,
-        Object.assign(this.scene.nodes[index], {
+        Object.assign(this.flowchartData.nodes[index], {
           x: left,
           y: top
         })
       );
     },
     nodeDelete(id) {
-      this.scene.nodes = this.scene.nodes.filter(node => {
+      this.flowchartData.nodes = this.flowchartData.nodes.filter(node => {
         return node.id !== id;
       });
-      this.scene.links = this.scene.links.filter(link => {
+      this.flowchartData.links = this.flowchartData.links.filter(link => {
         return link.from !== id && link.to !== id;
       });
       this.$emit("nodeDelete", id);
     },
     nodeEdit(id) {
       if (id) {
-        const node = this.scene.nodes.filter(x => x.id === id)[0];
+        const node = this.flowchartData.nodes.filter(x => x.id === id)[0];
         this.nodeValues.id = id;
         this.nodeValues.editMode = true;
         this.nodeValues.text = node.label;
         this.nodeValues.color = node.color;
-        // this.scene.nodes.forEach(x => {
+        // this.flowchartData.nodes.forEach(x => {
         //   if (x.id === id) {
         //     x.color = 'black';
         //   }
@@ -348,20 +404,90 @@ export default {
       this.nodeValues.colorIndex = index;
     },
     acceptChanges() {
-      this.scene.nodes.forEach(x => {
+      this.flowchartData.nodes.forEach(x => {
         if (x.id === this.nodeValues.id) {
           x.label = this.nodeValues.text;
           x.color = this.nodeValues.color;
         }
       });
       this.nodeValues.editMode = false;
+    },
+    addNode(category) {
+      const tmp = Date.now();
+      this.flowchartData.nodes.push({
+        id: tmp,
+        x: -400,
+        y: 50,
+        type: category.text,
+        label: "##value##",
+        color: category.color
+      });
+    },
+  },
+  mounted() {
+    this.rootDivOffset.top = this.$el ? this.$el.offsetTop : 0;
+    this.rootDivOffset.left = this.$el ? this.$el.offsetLeft : 0;
+    if (this.scene.nodes.length > 0) {
+      this.flowchartData = this.scene;
     }
+    this.nodeCategory.push(...this.categories);
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
+<style scoped lang="scss">  .node-add-btn {
+    cursor: pointer;
+    position: fixed;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 24px;
+    font-weight: bold;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 40px;
+    margin-right: 40px;
+    border-radius: 50%;
+    color: white;
+    background: rgb(60, 140, 231);
+    border: 5px solid rgb(43, 108, 192);
+    z-index: 99999;
+    &:active {
+      background-color: rgb(43, 108, 192);
+    }
+  }
+  .node-add-pnl {
+    cursor: pointer;
+    position: fixed;
+    margin: auto;
+    width: 200px;
+    height: 140px;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 40px;
+    margin-right: 100px;
+    background-color: white;
+    border: 3px solid rgba(128, 128, 128, 0.164);
+    border-radius: 20px;
+    z-index: 99999;
+    transition: ease all 0.3;
+    .node-category-box {
+      position: relative;
+      float: left;
+      width: 55px;
+      height: 55px;
+      line-height: 55px;
+      margin: 2px;
+      background-color: white;
+      border: 3px solid rgba(128, 128, 128, 0.164);
+      border-radius: 20px;
+      &:hover {
+        border-color: rgba(128, 128, 128, 0.527);
+      }
+    }
+  }
 .flowchart-container {
   margin: 0;
   background: #ddd;
@@ -453,7 +579,7 @@ export default {
   text-align: center;
   color: #fff;
   &:active {
-      background: rgb(43, 108, 192);
+    background: rgb(43, 108, 192);
   }
 }
 .flat-button:after {

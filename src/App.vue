@@ -8,7 +8,7 @@
       <input type="text" v-model="newNodeLabel" placeholder="Input node label">
       <button @click="addNode">ADD</button>
     </div>-->
-    <div class="node-add-btn" @click="paneControl = !paneControl">{{paneControl ? 'x' : '+'}}</div>
+    <!-- <div class="node-add-btn" @click="paneControl = !paneControl">{{paneControl ? 'x' : '+'}}</div>
     <div class="node-add-pnl" v-if="paneControl">
       <div
         class="node-category-box"
@@ -16,11 +16,10 @@
         :key="index"
         @dblclick="addNode(item)"
       >{{item.text}}</div>
-    </div>
+    </div> -->
 
     <simple-flowchart
       ref="flowchart"
-      :scene.sync="scene"
       @nodeClick="nodeClick"
       @nodeDelete="nodeDelete"
       @linkBreak="linkBreak"
@@ -52,7 +51,7 @@ export default {
             y: -69,
             type: "Action",
             label: "test1",
-            color: "orange"
+            color: "red"
           },
           {
             id: 4,
