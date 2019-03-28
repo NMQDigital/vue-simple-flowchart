@@ -20,6 +20,7 @@
         v-for="(link, index) in lines"
         :key="`link${index}`"
         @deleteLink="linkDelete(link.id)"
+        @editLink="linkEdit(link.id)"
       ></flowchart-link>
     </svg>
     <flowchart-node
@@ -31,10 +32,10 @@
       @linkingStop="linkingStop(node.id)"
       @nodeSelected="nodeSelected(node.id, $event)"
     ></flowchart-node>
-    <div class="node-edit-wrapper" v-if="nodeValues.editMode">
+    <div class="node-edit-wrapper" v-if="nodeValues.editModeNode">
       <div class="node-edit-panel">
         <div class="node-edit-panel-header">
-          <h4>Edit</h4>
+          <h4>Edit Node Value</h4>
         </div>
         <div class="node-edit-panel-label">
           <input type="text" v-model="nodeValues.text">
@@ -47,7 +48,27 @@
             :key="index"
             @click="changeColor(item, index)"
           ></button>
-        </div> -->
+        </div>-->
+        <div class="flat-button" @click="acceptChanges">Accept Changes</div>
+      </div>
+    </div>
+        <div class="node-edit-wrapper" v-if="nodeValues.editModeLink">
+      <div class="node-edit-panel">
+        <div class="node-edit-panel-header">
+          <h4>Edit Link Value</h4>
+        </div>
+        <div class="node-edit-panel-label">
+          <input type="text" v-model="nodeValues.text">
+        </div>
+        <!-- <div class="node-edit-panel-color">
+          <button
+            v-for="(item, index) in nodeValues.colors"
+            :style="{backgroundColor: item }"
+            :class="nodeValues.colorIndex === index ? 'color-buttons-active' : 'color-buttons'"
+            :key="index"
+            @click="changeColor(item, index)"
+          ></button>
+        </div>-->
         <div class="flat-button" @click="acceptChanges">Accept Changes</div>
       </div>
     </div>
@@ -109,7 +130,8 @@ export default {
         id: 0,
         text: "",
         color: "",
-        editMode: false,
+        editModeNode: false,
+        editModeLink: false,
         colors: [
           "red",
           "blue",
@@ -153,13 +175,7 @@ export default {
             color: "green"
           }
         ],
-        links: [
-          {
-            id: 3,
-            from: 2, // node id the link start
-            to: 4 // node id the link end
-          }
-        ]
+        links: []
       },
       nodeCategory: [
         { text: "type3", color: "olive" },
@@ -184,6 +200,7 @@ export default {
       };
     },
     lines() {
+
       const lines = this.flowchartData.links.map(link => {
         const fromNode = this.findNodeWithID(link.from);
         const toNode = this.findNodeWithID(link.to);
@@ -197,7 +214,8 @@ export default {
         return {
           start: [cx, cy],
           end: [ex, ey],
-          id: link.id
+          id: link.id,
+          text: link.text
         };
       });
       if (this.draggingLink) {
@@ -256,7 +274,8 @@ export default {
           const newLink = {
             id: maxID + 1,
             from: this.draggingLink.from,
-            to: index
+            to: index,
+            text: 'evet' // add text option
           };
           this.flowchartData.links.push(newLink);
           this.$emit("linkAdded", newLink);
@@ -341,6 +360,11 @@ export default {
           // console.log('delete2', this.action.dragging);
           this.nodeEdit(this.action.dragging);
         }
+        // if (e.target.className.baseVal === 'link-change-btn') {
+        //   // console.log('delete2', this.action.dragging);
+        //   // console.log('delete');
+        //   this.changeLinkText();
+        // }
       }
       this.action.linking = false;
       this.action.dragging = null;
@@ -389,7 +413,7 @@ export default {
       if (id) {
         const node = this.flowchartData.nodes.filter(x => x.id === id)[0];
         this.nodeValues.id = id;
-        this.nodeValues.editMode = true;
+        this.nodeValues.editModeNode = true;
         this.nodeValues.text = node.label;
         this.nodeValues.color = node.color;
         // this.flowchartData.nodes.forEach(x => {
@@ -404,13 +428,23 @@ export default {
       this.nodeValues.colorIndex = index;
     },
     acceptChanges() {
-      this.flowchartData.nodes.forEach(x => {
-        if (x.id === this.nodeValues.id) {
-          x.label = this.nodeValues.text;
-          x.color = this.nodeValues.color;
-        }
-      });
-      this.nodeValues.editMode = false;
+      if (this.nodeValues.editModeNode) {
+        this.flowchartData.nodes.forEach(x => {
+          if (x.id === this.nodeValues.id) {
+            x.label = this.nodeValues.text;
+            x.color = this.nodeValues.color;
+          }
+        });
+      }
+      if (this.nodeValues.editModeLink) {
+        this.flowchartData.links.forEach(x => {
+          if (x.id === this.nodeValues.id) {
+            x.text = this.nodeValues.text;
+          }
+        });
+      }
+      this.nodeValues.editModeNode = false;
+      this.nodeValues.editModeLink = false;
     },
     addNode(category) {
       const tmp = Date.now();
@@ -422,6 +456,20 @@ export default {
         label: "##value##",
         color: category.color
       });
+      this.paneControl = false;
+    },
+    linkEdit(id) {
+      if (id) {
+        const link = this.flowchartData.links.filter(x => x.id === id)[0];
+        this.nodeValues.id = id; // link id
+        this.nodeValues.editModeLink = true;
+        this.nodeValues.text = link.text;
+        // this.flowchartData.nodes.forEach(x => {
+        //   if (x.id === id) {
+        //     x.color = 'black';
+        //   }
+        // });
+      }
     }
   },
   mounted() {
