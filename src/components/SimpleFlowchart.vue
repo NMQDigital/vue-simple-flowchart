@@ -483,36 +483,37 @@ export default {
     background-color: rgb(43, 108, 192);
   }
 }
-.node-add-pnl {
-  cursor: pointer;
-  position: fixed;
-  margin: auto;
-  width: 300px;
-  height: 140px;
-  bottom: 0;
-  right: 0;
-  margin-bottom: 40px;
-  margin-right: 100px;
-  background-color: white;
-  border: 3px solid rgba(128, 128, 128, 0.164);
-  border-radius: 20px;
-  z-index: 99999;
-  transition: ease all 0.3;
-  .node-category-box {
-    position: relative;
-    float: left;
-    width: 55px;
-    height: 55px;
-    line-height: 55px;
-    margin: 2px;
+  .node-add-pnl {
+    cursor: pointer;
+    position: fixed;
+    margin: auto;
+    width: 200px;
+    height: 240px;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 40px;
+    margin-right: 100px;
     background-color: white;
     border: 3px solid rgba(128, 128, 128, 0.164);
-    border-radius: 20px;
-    &:hover {
-      border-color: rgba(128, 128, 128, 0.527);
+    border-radius: 5px;
+    z-index: 99999;
+    transition: ease all 0.3;
+    overflow-y: scroll;
+    .node-category-box {
+      position: relative;
+      float: left;
+      width: 80%;
+      height: auto;
+      line-height: 55px;
+      margin: 2px;
+      background-color: white;
+      border: 3px solid rgba(128, 128, 128, 0.164);
+      border-radius: 5px;
+      &:hover {
+        border-color: rgba(128, 128, 128, 0.527);
+      }
     }
   }
-}
 .flowchart-container {
   margin: 0;
   background: #ddd;
