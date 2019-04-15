@@ -6,7 +6,7 @@
         class="link-change-btn"
         :transform="textTransform"
         font-size="24"
-      >{{ text }}</text>
+      >{{ text || '-' }}</text>
     </a>
     <path :d="dAttr" :style="pathStyle"></path>
     <a v-if="show.delete" @click="deleteLink">

@@ -5,7 +5,7 @@
     @mouseup="handleUp"
     @mousedown="handleDown"
   >
-    <div class="node-add-btn" @click="paneControl = !paneControl">{{paneControl ? 'x' : '+'}}</div>
+    <div class="node-add-btn" @click="paneControl = !paneControl">{{paneControl ? '-' : '+'}}</div>
     <div class="node-add-pnl" v-if="paneControl">
       <div
         class="node-category-box"
@@ -145,42 +145,15 @@ export default {
         ],
         colorIndex: -1
       },
-      flowchartData: {
-        centerX: 1024,
-        centerY: 140,
-        scale: 1,
-        nodes: [
-          {
-            id: 2,
-            x: -700,
-            y: -69,
-            type: "Action",
-            label: "test1",
-            color: "green"
-          },
-          {
-            id: 4,
-            x: -357,
-            y: 80,
-            type: "Script",
-            label: "test2",
-            color: "olive"
-          },
-          {
-            id: 6,
-            x: -557,
-            y: 80,
-            type: "Rule",
-            label: "test3",
-            color: "green"
-          }
-        ],
-        links: []
-      },
+      flowchartData: {"centerX":1308,"centerY":643,"scale":1,"nodes":[{"id":1555337469783,"x":-1294,"y":-632,"type":"Segment Member","label":"Test Members","color":"olive"},{"id":1555337475998,"x":-991,"y":-486,"type":"Wait","label":"2 Months","color":"navy"},{"id":1555337502295,"x":-1240,"y":-321,"type":"Email1","label":"","color":"green"},{"id":1555337535151,"x":-878,"y":-181,"type":"Decision","label":"Clicked Email1","color":"purple"},{"id":1555337563864,"x":-1011,"y":79,"type":"Email2","label":"","color":"black"},{"id":1555337584872,"x":-615,"y":29,"type":"Form","label":"","color":"blue"}],"links":[{"id":1,"from":1555337469783,"to":1555337475998,"text":"-"},{"id":2,"from":1555337475998,"to":1555337502295,"text":"-"},{"id":3,"from":1555337502295,"to":1555337535151,"text":"-"},{"id":4,"from":1555337535151,"to":1555337563864,"text":"True"},{"id":5,"from":1555337535151,"to":1555337584872,"text":"False"}]},
       nodeCategory: [
-        { text: "type3", color: "olive" },
-        { text: "type4", color: "green" },
-        { text: "type5", color: "blue" }
+        { text: "Segment Member", color: "olive" },
+        { text: "Email1", color: "green" },
+        { text: "Email2", color: "black" },
+        { text: "Form", color: "blue" },
+        { text: "Landing Page", color: "red" },
+        { text: "Decision", color: "purple" },
+        { text: "Wait", color: "navy" },
       ]
     };
   },
@@ -275,7 +248,7 @@ export default {
             id: maxID + 1,
             from: this.draggingLink.from,
             to: index,
-            text: 'evet' // add text option
+            text: '-' // add text option
           };
           this.flowchartData.links.push(newLink);
           this.$emit("linkAdded", newLink);
@@ -369,6 +342,7 @@ export default {
       this.action.linking = false;
       this.action.dragging = null;
       this.action.scrolling = false;
+      console.log(JSON.stringify(this.flowchartData), 'export');
     },
     handleDown(e) {
       const target = e.target || e.srcElement;
@@ -513,7 +487,7 @@ export default {
   cursor: pointer;
   position: fixed;
   margin: auto;
-  width: 200px;
+  width: 300px;
   height: 140px;
   bottom: 0;
   right: 0;

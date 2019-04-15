@@ -20,14 +20,14 @@
 
     <simple-flowchart
       ref="flowchart"
-      :scene.sync='flowchartData'
-      :categories='nodeCategory'
+      :scene.sync="flowchartData"
+      :categories="nodeCategory"
       @nodeClick="nodeClick"
       @nodeDelete="nodeDelete"
       @linkBreak="linkBreak"
       @linkAdded="linkAdded"
       @canvasClick="canvasClick"
-      :height="700"
+      :height="1000"
     />
   </div>
 </template>
@@ -82,27 +82,15 @@ export default {
       },
       newNodeType: 0,
       newNodeLabel: "",
-      nodeCategory: [
-        { text: "type1", color: "orange" },
-        { text: "type2", color: "red" },
-      ],
+      nodeCategory: [],
       paneControl: false,
       flowchartData: {
-        centerX: 1024,
+        centerX: 1026,
         centerY: 140,
         scale: 1,
-        nodes: [
-          {
-            id: 2,
-            x: -700,
-            y: -69,
-            type: "Action",
-            label: "test1",
-            color: "green"
-          }
-        ],
+        nodes: [],
         links: []
-      }
+      },
     };
   },
   methods: {
@@ -187,26 +175,27 @@ export default {
     position: fixed;
     margin: auto;
     width: 200px;
-    height: 140px;
+    height: 240px;
     bottom: 0;
     right: 0;
     margin-bottom: 40px;
     margin-right: 100px;
     background-color: white;
     border: 3px solid rgba(128, 128, 128, 0.164);
-    border-radius: 20px;
+    border-radius: 5px;
     z-index: 99999;
     transition: ease all 0.3;
+    overflow-y: scroll;
     .node-category-box {
       position: relative;
       float: left;
-      width: 55px;
-      height: 55px;
+      width: 80%;
+      height: auto;
       line-height: 55px;
       margin: 2px;
       background-color: white;
       border: 3px solid rgba(128, 128, 128, 0.164);
-      border-radius: 20px;
+      border-radius: 5px;
       &:hover {
         border-color: rgba(128, 128, 128, 0.527);
       }
